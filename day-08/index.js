@@ -13,12 +13,11 @@ function isVisible(i, j) {
         return true;
     let row = trees[i];
     let col = trees.map(x => x[j]);
-    if (
-        row.slice(0, j).every(x => x < treeHeight) ||
+    
+    return row.slice(0, j).every(x => x < treeHeight) ||
         row.slice(j+1).every(x => x < treeHeight)  ||
         col.slice(0, i).every(x => x < treeHeight) ||
-        col.slice(i+1).every(x => x < treeHeight)
-    ) return true;
+        col.slice(i+1).every(x => x < treeHeight);
 }
 
 function scenicScore(i, j) {
@@ -52,5 +51,5 @@ for (let i = 0; i < trees.length; i++) {
     }
 }
 
-console.log(`Part 2: ${visibleTrees}`);
-console.log(`Part 1: ${Math.max(...scenicScores)}`);
+console.log(`Part 1: ${visibleTrees}`);
+console.log(`Part 2: ${Math.max(...scenicScores)}`);
