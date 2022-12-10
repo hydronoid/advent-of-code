@@ -6,22 +6,16 @@ function inputArray(filename) {
 }
 
 const input = inputArray('input.txt');
-var register = 1;
-var cycle = 1;
-
+var register = 1, cycle = 1;
 var signalStrengths = [];
-var importantSignalCycle = 20;
 
-var spritePosition = [0, 1, 2];
 var crtRows = new Array(6);
 for (let i=0; i<crtRows.length; i++) crtRows[i] = '';
 
 function checkCycle() {
-    if (cycle == importantSignalCycle) {
+    if ((cycle + 20) % 40 == 0)
         signalStrengths.push(cycle * register);
-        importantSignalCycle += 40;
-    }
-    crtRows[Math.floor((cycle-1) / 40)] += spritePosition.includes((cycle-1) % 40) ? '#' : '.';
+    crtRows[Math.floor((cycle-1) / 40)] += Math.abs(register - ((cycle-1) % 40)) <= 1 ? '#' : '.';
 }
 
 input.forEach(line => {
@@ -30,7 +24,6 @@ input.forEach(line => {
         cycle++;
         checkCycle();
         register += parseInt(line.split(' ')[1]);
-        spritePosition = [register-1, register, register+1]
     }
     cycle++;
 });
