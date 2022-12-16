@@ -9,7 +9,7 @@ const input = inputArray('input.txt');
 let sensors = [];
 let minX = minY = Infinity;
 let maxX = maxY = -Infinity;
-let maxDist = -Infinity;
+let maxDist = 0;
 
 input.forEach((line, idx) => {
     let [sensorStr, beaconStr] = line.split(': ');
@@ -31,20 +31,11 @@ input.forEach((line, idx) => {
 
     let [x1, y1] = s.sensorLoc;
     let [x2, y2] = s.beaconLoc;
-    minX = Math.min(minX, x1, x2);
-    minY = Math.min(minY, y1, y2);
-    maxX = Math.max(maxX, x1, x2);
-    maxY = Math.max(maxY, y1, y2);
+    minX = Math.min(minX, x1 - s.distance, x2 - s.distance);
+    minY = Math.min(minY, y1 - s.distance, y2 - s.distance);
+    maxX = Math.max(maxX, x1 + s.distance, x2 + s.distance);
+    maxY = Math.max(maxY, y1 + s.distance, y2 + s.distance);
 });
-
-/*
-Add/subtract the maximum Manhattan distance from the bounds,
-as there are more points that can't contain a beacon in this expanded area.
-*/
-minX -= maxDist;
-minY -= maxDist;
-maxY += maxDist;
-maxX += maxDist;
 
 function manhattanDist(pointA, pointB) {
     let [x1, y1] = pointA;
