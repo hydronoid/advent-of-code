@@ -18,8 +18,8 @@ Day 11 - a modular arithmetic property: $\forall k.\  ((a \mod km) \mod m = a \m
 Day 12 - BFS for undirected unweighted graphs, more succinct 2D array initialisation\
 Day 13 - multiple args in `.forEach(element, index, array)`, realising `indexOf()` doesn't work as intended for subarrays, `JSON.parse()` as an alternative to `eval()` for strings of arrays\
 Day 14 - creating a "range"-like array in one line, and an alternative solution is [memoizing the path of each previous grain of sand and then starting at the last position before it landed](https://www.reddit.com/r/adventofcode/comments/zljtev/2022_day_14_part_2_clever_alternative_solution/j05uo9i/) (although I didn't implement this)\
-Day 15 - `max = Math.max(max, x);` instead of `if (x > max) max = x;` (and likewise for min), `for ... of` loops (I should've known about this way earlier), and sometimes functions originally intended to return booleans don't always have only two outcomes\
+Day 15 - `max = Math.max(max, x);` instead of `if (x > max) max = x;` (and likewise for min), `for ... of` loops (I should've known about this way earlier), and sometimes functions originally intended to return booleans don't always have only two outcomes
 
-Day 20 - modulo vs. remainder (i.e. `function mod(a, b) {return ((a % b) + b) % b;}`)\
+Day 20 - modulo vs. remainder (i.e. `function mod(a, b) {return ((a % b) + b) % b;}`)
 
 Total stars: 36/50
