@@ -3,9 +3,9 @@
 #include <vector>
 
 struct CubeSet {
-    int red;
-    int green;
-    int blue;
+    int red = 0;
+    int green = 0;
+    int blue = 0;
 };
 
 struct Game {
@@ -34,8 +34,8 @@ std::vector<std::string> read_file_to_array(const std::string& file_name) {
 }
 
 CubeSet parse_set(std::string set) {
-    CubeSet cs{0, 0, 0};
-    set += ","; // add colon to end to parse last cube (so str.find(",") will find it)
+    CubeSet cs;
+    set += ","; // add comma to the end, to parse last cube (so str.find(",") will find it)
 
     size_t start = 0;
     size_t end = set.find(",");
@@ -67,7 +67,7 @@ Game parse_game(std::string line) {
 
     std::string sets = line.substr(start);
     size_t end = line.find(";");
-    line += ";"; // add semicolon to end to parse last set
+    line += ";"; // add semicolon to the end, to parse last set
 
     while (end != std::string::npos) {
         std::string current_set = line.substr(start + 1, end-start-1);
@@ -91,14 +91,14 @@ int game_is_possible(Game g, int n_red, int n_green, int n_blue) {
 }
 
 int calculate_power(Game g) {
-    int max_red = 0, max_green = 0, max_blue = 0;
+    CubeSet max;
 
     for (CubeSet s : g.sets) {
-        max_red = std::max(s.red, max_red);
-        max_green = std::max(s.green, max_green);
-        max_blue = std::max(s.blue, max_blue);
+        max.red = std::max(s.red, max.red);
+        max.green = std::max(s.green, max.green);
+        max.blue = std::max(s.blue, max.blue);
     }
-    return max_red * max_green * max_blue;
+    return max.red * max.green * max.blue;
 }
 
 
@@ -107,7 +107,7 @@ int main() {
     int part1 = 0, part2 = 0;
     for (const std::string& line : input) {
         Game g = parse_game(line);
-        
+
         part1 += game_is_possible(g, 12, 13, 14);
         part2 += calculate_power(g);
         
