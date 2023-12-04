@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <cmath>
+#include <numeric> 
 
 int parse_card(std::string line) {
     int card_num;
@@ -33,14 +34,17 @@ int parse_card(std::string line) {
     return num_matches;
 }
 
-int calculate_scratchcards(int card_matches[], int i) {
-    int num_matches = card_matches[i];
-    int num_scratchcards = num_matches;
+int calculate_scratchcards(int card_matches[], int size) {
+    std::vector<int> card_instances = std::vector<int>(size, 1); // 1 for original
 
-    for (int j = i+1; j < i+1+num_matches; j++)
-        num_scratchcards += calculate_scratchcards(card_matches, j);
-
-    return num_scratchcards;
+    for (int i = 0; i < size; i++) {
+        int num_matches = card_matches[i];
+        
+        for (int j = i+1; j < i+1+num_matches; j++) {
+            card_instances[j] += card_instances[i];
+        }
+    }
+    return std::accumulate(card_instances.begin(), card_instances.end(), 0);
 }
 
 int main() {
@@ -56,9 +60,7 @@ int main() {
         card_matches[i] = num_matches;
     }
 
-    for (int i = 0; i < n; i++) {
-        part2 += calculate_scratchcards(card_matches, i) + 1; // +1 for original copy
-    }
+    part2 = calculate_scratchcards(card_matches, n);
 
     std::cout << part1 << std::endl; // 27059
     std::cout << part2 << std::endl; // 5744979
