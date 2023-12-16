@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <vector>
-#include <unordered_map>
 #include <string>
 
 int hash(std::string s) {
@@ -40,7 +39,6 @@ void print_boxes(std::vector<std::vector<std::pair<std::string, int>>> boxes) {
 
 int calculate_focusing_power(std::vector<std::string> steps) {
     std::vector<std::vector<std::pair<std::string, int>>> boxes(256);
-    std::unordered_map<std::string, int> lens_locations;
 
     // commence initialisation sequence
     for (std::string& s : steps) {
@@ -55,10 +53,6 @@ int calculate_focusing_power(std::vector<std::string> steps) {
             // found -> remove it
             if (slot != -1) {
                 boxes[box_number].erase(boxes[box_number].begin() + slot);
-
-                if (lens_locations.find(label) != lens_locations.end()) {
-                    lens_locations[label] = -1;
-                }
             }
         } else if (operation == '=') {
             int focal_length = std::stoi(s.substr(i+1));
@@ -69,7 +63,6 @@ int calculate_focusing_power(std::vector<std::string> steps) {
             } else {
                 // lens doesn't exist -> add it to the box
                 boxes[box_number].emplace_back(label, focal_length);
-                lens_locations[label] = box_number;
             }
         }
 
@@ -81,17 +74,9 @@ int calculate_focusing_power(std::vector<std::string> steps) {
 
     int total_focusing_power = 0;
 
-    for (const auto& pair : lens_locations) {
-        // not in a box
-        if (pair.second == -1)
-            continue;
-
-        int box_number = pair.second;
-        int slot = find_lens_slot(boxes[box_number], pair.first);
-        int focal_length = boxes[box_number][slot].second;
-
-        total_focusing_power += (box_number + 1) * (slot + 1) * focal_length;
-    }
+    for (int i = 0; i < boxes.size(); i++)
+        for (int j = 0; j < boxes[i].size(); j++)
+            total_focusing_power += (i + 1) * (j + 1) * boxes[i][j].second;
 
     return total_focusing_power;
 }
