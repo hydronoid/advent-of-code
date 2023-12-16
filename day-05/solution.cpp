@@ -45,11 +45,11 @@ std::vector<std::vector<map>> parse_input(std::vector<std::string> input, std::v
     return maps;
 }
 
-long long get_location_number(long long seed, std::vector<std::vector<map>> maps) {
+long long get_location_number(long long seed, std::vector<std::vector<map>>& maps) {
     long long curr_num = seed;
 
-    for (std::vector<map> category : maps) {
-        for (map m : category) {
+    for (std::vector<map>& category : maps) {
+        for (map& m : category) {
             if (m.src_start <= curr_num && curr_num < m.src_start+m.range_length) {
                 curr_num = m.dest_start + (curr_num - m.src_start);
                 break;
@@ -59,7 +59,7 @@ long long get_location_number(long long seed, std::vector<std::vector<map>> maps
     return curr_num;
 }
 
-long long get_seed_from_location(long long location, std::vector<std::vector<map>> maps) {
+long long get_seed_from_location(long long location, std::vector<std::vector<map>>& maps) {
     // just the reverse of the above function
     long long curr_num = location;
     for (auto category = maps.rbegin(); category != maps.rend(); category++) {
@@ -73,7 +73,7 @@ long long get_seed_from_location(long long location, std::vector<std::vector<map
     return curr_num;
 }
 
-bool is_initial_seed(long long seed_number, std::vector<long long> seeds) {
+bool is_initial_seed(long long seed_number, std::vector<long long>& seeds) {
     for (int i = 0; i < seeds.size() - 1; i += 2) {
         long long seed_start = seeds[i];
         long long seed_end = seed_start + seeds[i+1];
@@ -95,7 +95,7 @@ int main() {
         part1 = std::min<long long>(location, part1);
     }
     
-    // takes about a minute to run, brute force
+    // takes about 35 seconds to run, brute force
     long long part2 = 0;
     while (++part2 > 0) {
         long long s = get_seed_from_location(part2, maps);
