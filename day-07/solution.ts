@@ -8,61 +8,36 @@ data.forEach((line: string) => {
     let testVal: number = parseInt(lhs);
     let rhsVals: number[] = rhs.split(" ").map(Number);
 
-    if (findSolution(testVal, rhsVals, ['+', '*']))
+    if (findSolution(testVal, rhsVals, ['+', '*'], rhsVals[0], 1))
         part1 += testVal;
     
-    if (findSolution(testVal, rhsVals, ['+', '*', '||']))
+    if (findSolution(testVal, rhsVals, ['+', '*', '||'], rhsVals[0], 1))
         part2 += testVal;
 });
 
-function generateOperatorPermutations(numOperators: number, operators: string[]): string[][] {
-    let permutations: string[][] = [];
+// recursively try all operator combinations
+function findSolution(testVal: number, rhsVals: number[], operators: string[], currentResult: number, i: number): boolean {
+    // base case - reached the end of the rhsVals
+    if (i === rhsVals.length)
+        return currentResult === testVal;
+    
+    // this cuts down the time in half
+    if (currentResult > testVal)
+        return false;
+    
+    let solutions: boolean[] = [];
 
-    // recursively populate the permutations array
-    // e.g. for 2 operators, permutations will be: [['+', '+'], ['+', '*'], ['*', '+'], ['*', '*']]
-    function generatePermutations(i: number, currPermutation: string[]): void {
-        if (i === numOperators) {
-            // base case -> finished populating a permutation
-            permutations.push([...currPermutation]);
-            return;
-        }
-
-        for (const operator of operators) {
-            currPermutation.push(operator);
-            generatePermutations(i+1, currPermutation);
-            currPermutation.pop();
-        }
-    }
-    generatePermutations(0, []);
-
-    return permutations;
-}
-
-function findSolution(testVal: number, rhsVals: number[], operators: string[]): boolean {
-    let operatorPermutations: string[][] = generateOperatorPermutations(rhsVals.length - 1, operators);
-
-    // brute force every permutation :)
-    for (const permutation of operatorPermutations) {
-        let result = rhsVals[0];
-
-        // evaluate left-to-right
-        for (let i = 1; i < rhsVals.length; i++) {
-            if (permutation[i-1] === '+')
-                result += rhsVals[i];
-            else if (permutation[i-1] === '*')
-                result *= rhsVals[i];
-            else if (permutation[i-1] === '||')
-                result = parseInt(result.toString() + rhsVals[i].toString());
-
-            if (result > testVal)
-                break;
-        }
-
-        if (result === testVal)
-            return true;
+    for (const operator of operators) {
+        if (operator === '+') 
+            solutions.push(findSolution(testVal, rhsVals, operators, currentResult + rhsVals[i], i+1));
+        else if (operator === '*') 
+            solutions.push(findSolution(testVal, rhsVals, operators, currentResult * rhsVals[i], i+1));
+        else if (operator === '||') 
+            solutions.push(findSolution(testVal, rhsVals, operators, parseInt(`${currentResult}${rhsVals[i]}`), i+1));
     }
 
-    return false;
+    // true if any of elements of solutions are true
+    return solutions.some(Boolean);
 }
 
 console.log(`Part 1: ${part1}`); // 3245122495150
