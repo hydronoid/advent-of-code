@@ -40,13 +40,13 @@ function calculateTokenCost(prizeOffset: number) {
         ];
     
         // just solve the system of linear equations :)
-        const [APresses, BPresses] = lusolve(coefficients, constants).map(row => row[0]);
+        const [aPresses, bPresses] = (lusolve(coefficients, constants) as number[][]).map(row => row[0]);
     
         // solution exists if the floats are close enough to the integer values
         // e.g. 25.0004
         // for part 2 the difference goes down to 1e-4
-        if (isInteger(APresses) && isInteger(BPresses))
-            cost += 3 * Math.round(APresses) + Math.round(BPresses);
+        if (isInteger(aPresses) && isInteger(bPresses))
+            cost += 3 * Math.round(aPresses) + Math.round(bPresses);
     }
     
     return cost;

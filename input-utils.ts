@@ -1,18 +1,24 @@
-import * as fs from 'fs';
+import { readFileSync } from 'fs';
 
 export function readInputToArray(filePath: string): string[] {
     try {
-        const data: string = fs.readFileSync(filePath, 'utf-8');
+        const data: string = readFileSync(filePath, 'utf-8');
         return data.split(/\r?\n/);
-    } catch (err) {
-        throw new Error(`Error reading file: ${err.message}`);
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            throw new Error(`Error reading file: ${err.message}`);
+        }
+        throw new Error('An unknown error occurred while reading the file.');
     }
 }
 
 export function readInputToString(filePath: string): string {
     try {
-        return fs.readFileSync(filePath, 'utf-8');
-    } catch (err) {
-        throw new Error(`Error reading file: ${err.message}`);
+        return readFileSync(filePath, 'utf-8');
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            throw new Error(`Error reading file: ${err.message}`);
+        }
+        throw new Error('An unknown error occurred while reading the file.');
     }
 }
