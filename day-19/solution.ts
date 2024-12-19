@@ -3,48 +3,32 @@ import { readInputToArray } from '../input-utils';
 const data: string[] = readInputToArray('input.txt');
 const patterns: string[] = data[0].split(', ');
 const designs: string[] = data.slice(2);
-const memo: { [key: string]: boolean } = {};
+let memo: { [key: string]: number } = {};
 
+function dfs(currentStr: string, targetStr: string): number {
+    if (currentStr === targetStr)
+        return 1;
 
-function dfs(currentStr: string, targetStr: string): boolean {
-    if (currentStr === targetStr) {
-        memo[targetStr] = true;
-        return true;
-    }
+    const remainingStr = targetStr.slice(currentStr.length);
+    if (memo.hasOwnProperty(remainingStr))
+        return memo[remainingStr];
 
-    if (currentStr.length > targetStr.length)
-        return false;
+    let ways = 0;
 
-    for (const p of patterns) {
-        const nextStr = currentStr + p;
-        const remainingStr = targetStr.slice(nextStr.length);
+    for (const p of patterns)
+        if (targetStr.startsWith(currentStr + p))
+            ways += dfs(currentStr + p, targetStr);
 
-        if (memo.hasOwnProperty(remainingStr) && remainingStr.length > 0) {
-            // console.log(nextStr, remainingStr, memo[remainingStr])
-            if (memo[remainingStr])
-                return true;
-            continue;
-        }
-
-
-        if (targetStr.startsWith(nextStr)) {
-            const result = dfs(nextStr, targetStr);
-            memo[remainingStr] = result;
-            if (result)
-                return true;
-        }
-    }
-
-    memo[targetStr] = false;
-
-    return false;
+    memo[remainingStr] = ways;
+    return ways;
 }
 
+let part1 = 0, part2 = 0;
+for (const d of designs) {
+    const totalWays = dfs('', d);
+    part1 += totalWays > 0 ? 1 : 0;
+    part2 += totalWays;
+}
 
-let part1 = 0;
-for (const d of designs)
-    if (dfs('', d))
-        part1++;
-
-
-console.log(part1);
+console.log(`Part 1: ${part1}`);    // 360
+console.log(`Part 2: ${part2}`);    // 577474410989846
