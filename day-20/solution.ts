@@ -51,12 +51,10 @@ function bfs(iStart: number, jStart: number, grid: string[][], part2Cheat: boole
     return distances;
 }
 
-function calculateTimeSave(startToA: number, cheatTime: number, bToEnd: number, startToEnd: number): number {
-    const newStartToEnd = startToA + cheatTime + bToEnd;
-    return startToEnd - newStartToEnd;
+function calculateTimeSave(startToA: number, cheatTime: number, startToB: number): number {
+    return startToB - startToA - cheatTime;
 }
 
-const endKey: string = JSON.stringify(END);
 const dists: { [key: string]: number } = bfs(START[0], START[1], grid, false);
 
 let part1 = 0, part2 = 0;
@@ -70,7 +68,7 @@ for (const key of Object.keys(dists)) {
         const j2 = j + dj*2;
         const nextKey = JSON.stringify([i2, j2]);
         if (dists[nextKey]) {
-            const timeSave = calculateTimeSave(dists[key], 2, dists[endKey] - dists[nextKey], dists[endKey]);
+            const timeSave = calculateTimeSave(dists[key], 2, dists[nextKey]);
             if (timeSave >= 100)
                 part1++;
         }
@@ -84,8 +82,7 @@ for (const key of Object.keys(dists)) {
             const timeSave = calculateTimeSave(
                 dists[key], 
                 distsWithCheats[nextKey], // how many steps we cheat
-                dists[endKey] - dists[nextKey],
-                dists[endKey]
+                dists[nextKey]
             );
 
             if (timeSave >= 100)
